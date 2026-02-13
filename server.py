@@ -269,14 +269,20 @@ if __name__ == "__main__":
     app_svc.register_subapp("/api/v2", app.api.v2.make_app(app_svc.get_services()))
     init_swagger_documentation(app_svc.application)
     if args.uiDevHost:
-        if not os.path.exists(f"{MAGMA_PATH}/dist"):
+        if not os.path.exists(f"{MAGMA_PATH}/dist") and (os.path.exists(f"{MAGMA_PATH}") and len(os.listdir(MAGMA_PATH)) > 0):
             logging.info("Building VueJS front-end.")
             subprocess.run(["npm", "run", "build"], cwd=MAGMA_PATH, check=True)
             logging.info("VueJS front-end build complete.")
+        else:
+            logging.warning(
+                f"[bright_yellow]The `--uidev` flag was supplied, but the Caldera v5 Vue UI is not present."
+                f" The Vue UI should be located in {MAGMA_PATH}. Use `--recursive` when cloning Caldera.[/bright_yellow]"
+            )
+            args.uiDevHost = False
         app_svc.application.on_response_prepare.append(enable_cors)
 
     if args.build:
-        if len(os.listdir(MAGMA_PATH)) > 0:
+        if os.path.exists(f"{MAGMA_PATH}") and len(os.listdir(MAGMA_PATH)) > 0:
             logging.info("Building VueJS front-end.")
             subprocess.run(["npm", "install"], cwd=MAGMA_PATH, check=True)
             subprocess.run(["npm", "run", "build"], cwd=MAGMA_PATH, check=True)
