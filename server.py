@@ -294,9 +294,9 @@ if __name__ == "__main__":
                 f" The Vue UI should be located in {MAGMA_PATH}. Use `--recursive` when cloning Caldera.[/bright_yellow]"
             )
     else:
-        if os.path.exists(f"{MAGMA_PATH}") and len(os.listdir(MAGMA_PATH)) > 0:
+        if os.path.exists(f"{MAGMA_PATH}") and len(os.listdir(MAGMA_PATH)) > 0 and not os.path.exists(f"{MAGMA_PATH}/dist"):
             logging.warning(
-                "[bright_yellow]Built Caldera v5 Vue components detected, but `--build` flag not supplied."
+                "[bright_yellow]Caldera v5 Vue UI source detected, but not built components, and `--build` flag not supplied."
                 " If attempting to start Caldera v5 with the UI for the first time, the `--build` flag must be"
                 " supplied to trigger the building of the Vue source components.[/bright_yellow]"
             )
